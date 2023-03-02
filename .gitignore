@@ -1,3 +1,6 @@
+# nvim packer specific folder
+plugin/
+
 # Compiled Lua sources
 luac.out
 

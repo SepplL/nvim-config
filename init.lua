@@ -27,7 +27,7 @@ require('packer').startup(function(use)
   }
   use { 'tpope/vim-rhubarb',                                                           -- Fugitive-companion to interact with github
     requires = { 'tpope/vim-fugitive', opt = true },
-    opt = true,
+    -- opt = true,
     cmd = { 'Git', 'Gitsigns' },
     config = function()
       require('packages.rhubarb');
@@ -35,7 +35,7 @@ require('packer').startup(function(use)
   }
   use { 'lewis6991/gitsigns.nvim',                                                     -- Add git related info in the signs columns and popups
     requires = { 'nvim-lua/plenary.nvim', opt = true },
-    opt = true,
+    -- opt = true,
     cmd = { 'Git', 'Gitsigns' },
     config = function()
       require('packages.Gitsigns');
@@ -87,16 +87,16 @@ require('packer').startup(function(use)
 
   use { 'junegunn/fzf',                                                                -- Install fzf and set base requirements instead of telescope
     requires = { 'nvim-lua/popup.nvim',
-      'nvim-lua/plenary.nvim', opt = true },
+      'nvim-lua/plenary.nvim', }, -- opt = true },
     run = './install --bin',
-    opt = true,
+    -- opt = false,
     cmd = { 'FZF', 'FzfLua' },
     -- keys = { '<leader>' },
   }
   use { 'ibhagwan/fzf-lua',                                                            -- Fuzzy finder for lua
     requires = { 'kyazdani42/nvim-web-devicons', 'nvim-lua/popup.nvim',                -- popup for nice fzf looks
-      'nvim-lua/plenary.nvim', opt = true },
-    opt = true,
+      'nvim-lua/plenary.nvim', }, -- opt = true },
+    -- opt = false,
     cmd = { 'FZF', 'FzfLua' },
     -- keys = { '<leader>' },
     config = function()
@@ -106,7 +106,7 @@ require('packer').startup(function(use)
 
   use { 'kyazdani42/nvim-tree.lua',                                                    -- Use NerdTree
     requires = { 'nvim-tree/nvim-web-devicons', opt = true },
-    opt = true,  -- for lazy loading lua.packages
+    -- opt = true,  -- for lazy loading lua.packages
     cmd = { 'NvimTreeToggle', 'NvimTreeFindFile' },
     config = function()
       -- put settings in seperate files for organisation and overview

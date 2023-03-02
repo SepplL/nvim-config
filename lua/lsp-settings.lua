@@ -45,7 +45,7 @@ local on_attach = function(_, bufnr)
 end
 
 -- nvim-cmp supports additional completion capabilities
-local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
 
 -- Setup mason so it can manage external tooling
 require('mason').setup()
@@ -57,7 +57,7 @@ local servers = {
   'pyright',
   'jedi_language_server',
   'pylsp',
-  'sumneko_lua',
+  'lua_language_server',
   'bashls',
   'texlab',
   'cmake',
@@ -85,7 +85,7 @@ local runtime_path = vim.split(package.path, ';')
 table.insert(runtime_path, 'lua/?.lua')
 table.insert(runtime_path, 'lua/?/init.lua')
 
-require('lspconfig').sumneko_lua.setup {
+require('lspconfig').lua_language_server.setup {
   on_attach = on_attach,
   capabilities = capabilities,
   settings = {
