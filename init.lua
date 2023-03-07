@@ -189,6 +189,24 @@ vim.o.laststatus = 2
 
 vim.o.tabstop = 4
 
+-- set shortcut for disable highlighting noh
+vim.api.nvim_set_keymap( "n", "<esc><esc>", ":noh<cr>", {
+  noremap = true}
+)
+
+-- disable mouse
+vim.opt.mouse = ""
+
+-- further display and indentation settings
+vim.o.foldlevel = 99
+vim.opt.linebreak = true
+vim.opt.textwidth = 90
+vim.opt.smarttab = true
+vim.opt.autoindent = true
+vim.opt.smartindent = true
+vim.opt.breakindent = true
+
+
 require('additional')
 require('mappings')
 require('lsp-settings')
