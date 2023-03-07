@@ -52,3 +52,12 @@ require("formatter").setup {
     }
   }
 }
+
+local api = vim.api
+api.nvim_set_keymap('n', '<leader>F', ":FormatWrite<CR>", { noremap = true, silent = true })
+
+-- local frmt = api.nvim_create_augroup( "FormatAutogroup" )
+-- api.nvim_create_autocmd( "FormatOnWrite", {
+--   command = "! BufWritePost * FormatWrite",
+--   group = frmt,
+-- })

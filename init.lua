@@ -95,14 +95,14 @@ require('packer').startup(function(use)
     requires = { 'nvim-lua/popup.nvim',
       'nvim-lua/plenary.nvim', }, -- opt = true },
     run = './install --bin',
-    -- opt = false,
+    opt = true,
     cmd = { 'FZF', 'FzfLua' },
     -- keys = { '<leader>' },
   }
   use { 'ibhagwan/fzf-lua',                                                            -- Fuzzy finder for lua
     requires = { 'kyazdani42/nvim-web-devicons', 'nvim-lua/popup.nvim',                -- popup for nice fzf looks
       'nvim-lua/plenary.nvim', }, -- opt = true },
-    -- opt = false,
+    opt = true,
     cmd = { 'FZF', 'FzfLua' },
     -- keys = { '<leader>' },
     config = function()
