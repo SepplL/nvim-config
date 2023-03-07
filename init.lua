@@ -63,6 +63,12 @@ require('packer').startup(function(use)
   use { 'hrsh7th/nvim-cmp', requires = { 'hrsh7th/cmp-nvim-lsp' } }                    -- Autocompletion
   use { 'L3MON4D3/LuaSnip', requires = { 'saadparwaiz1/cmp_luasnip' } }                -- Snippet Engine and Snippet Expansion
 
+  use { 'mhartington/formatter.nvim',                                      -- use advanced diagnostics with automated formatting
+    config = function()
+      require('packages.formatter');
+    end
+  }
+
   use { 'Mofiqul/dracula.nvim',                                                        -- use darcula colortheme
     opt = false,
     config = function()
