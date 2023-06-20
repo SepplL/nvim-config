@@ -1,159 +1,133 @@
--- Install packer
-local install_path = vim.fn.stdpath 'data' .. '/site/pack/packer/start/packer.nvim'
-local is_bootstrap = false
-if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
-  is_bootstrap = true
-  vim.fn.execute('!git clone https://github.com/wbthomason/packer.nvim ' .. install_path)
-  vim.cmd [[packadd packer.nvim]]
+-- disable netrw at the very start of init.lua
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
+-- create symlink to move package directory to /data with
+-- ln -s /data/nvim/... ~/.local/share/nvim
+-- only necessary in quota based $HOME
+local lazypath = vim.fn.stdpath "data" .. "lazy/lazy.nvim"
+if not vim.loop.fs_stat( lazypath ) then
+  vim.fn.system({
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable", -- latest stable release
+    lazypath,
+  })
 end
+vim.opt.rtp:prepend( lazypath )
 
 -- [[ Basic Keymaps ]]
 -- Set <space> as the leader key
 -- See `:help mapleader`
---  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
-vim.g.mapleader = ' '
-vim.g.maplocalleader = ','
-
+-- NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
+vim.g.mapleader = " "
+vim.g.maplocalleader = ","
 
 -- stylua: ignore start
-require('packer').startup(function(use)
-  use 'wbthomason/packer.nvim'                                                         -- Package manager
-  use { 'tpope/vim-fugitive',                                                          -- Git commands in nvim
-    opt = true,
-    cmd = { 'Git', 'Gitsigns' },
+require("lazy").setup({
+  { "LazyVim/LazyVim", import = "lazyvim.plugins" },
+  { "tpope/vim-fugitive",                                                          -- Git commands in nvim
     config = function()
-      require('packages.fugitive');
+      require("packages.fugitive");
     end
-  }
-  use { 'tpope/vim-rhubarb',                                                           -- Fugitive-companion to interact with github
-    requires = { 'tpope/vim-fugitive', opt = true },
-    -- opt = true,
-    cmd = { 'Git', 'Gitsigns' },
+  },
+  { "tpope/vim-rhubarb",                                                           -- Fugitive-companion to interact with github
+    dependencies = { "tpope/vim-fugitive" },
     config = function()
-      require('packages.rhubarb');
+      require("packages.rhubarb");
     end
-  }
-  use { 'lewis6991/gitsigns.nvim',                                                     -- Add git related info in the signs columns and popups
-    requires = { 'nvim-lua/plenary.nvim', opt = true },
-    -- opt = true,
-    cmd = { 'Git', 'Gitsigns' },
+  },
+  { "lewis6991/gitsigns.nvim",                                                     -- Add git related info in the signs columns and popups
+    dependencies = { "nvim-lua/plenary.nvim" },
     config = function()
-      require('packages.Gitsigns');
+      require("packages.Gitsigns");
     end
-  }
-  use { 'numToStr/Comment.nvim',                                                       -- "gc" to comment visual regions/lines
-    opt = false,
+  },
+  { "numToStr/Comment.nvim",                                                       -- "gc" to comment visual regions/lines
     config = function()
-      require('packages.comment');
+      require("packages.comment");
     end
-  }
-  use { 'nvim-treesitter/nvim-treesitter',                                             -- Highlight, edit, and navigate code
-    opt = false,                                                                       -- no lazy load -> always proper highlighting and formatting
+  },
+  { "nvim-treesitter/nvim-treesitter",                                             -- Highlight, edit, and navigate code
     config = function()
-      require('packages.treesitter');
+      require("packages.treesitter");
     end
-  }
-  use { 'nvim-treesitter/nvim-treesitter-textobjects',                                 -- Additional textobjects for treesitter
-   after = { 'nvim-treesitter' },
-  }
+  },
+  {
+    "nvim-treesitter/nvim-treesitter-textobjects",                                 -- Additional textobjects for treesitter
+  },
 
-  use 'neovim/nvim-lspconfig'                                                          -- Collection of configurations for built-in LSP client
-  use 'williamboman/mason.nvim'                                                        -- Manage external editor tooling i.e LSP servers
-  use 'williamboman/mason-lspconfig.nvim'                                              -- Automatically install language servers to stdpath
-  use { 'hrsh7th/nvim-cmp', requires = { 'hrsh7th/cmp-nvim-lsp' } }                    -- Autocompletion
-  use { 'L3MON4D3/LuaSnip', requires = { 'saadparwaiz1/cmp_luasnip' } }                -- Snippet Engine and Snippet Expansion
-
-  use { 'mhartington/formatter.nvim',                                      -- use advanced diagnostics with automated formatting
+  {
+    "neovim/nvim-lspconfig",                                                       -- Collection of configurations for built-in LSP client
+  },
+  {
+    "williamboman/mason.nvim",                                                     -- Manage external editor tooling i.e LSP servers
+  },
+  { "williamboman/mason-lspconfig.nvim",                                           -- Automatically install language servers to stdpath
     config = function()
-      require('packages.formatter');
+      require("mason-lspconfig.install").compilers = { "gcc" };
     end
-  }
+  },
+  { "hrsh7th/nvim-cmp" },                                                          -- Autocompletion
+  { "hrsh7th/cmp-nvim-lsp" },
 
-  use { 'Mofiqul/dracula.nvim',                                                        -- use darcula colortheme
-    opt = false,
-    config = function()
-      require('packages.dracula');
-    end
-  }
-  use { 'nvim-lualine/lualine.nvim',                                                   -- Fancier statusline
-    opt = false,
-    requires = { 'kyazdani42/nvim-web-devicons',
-      'Mofiqul/dracula.nvim', opt = true },
-    config = function()
-      require('packages.LuaLine');
-    end
-  }
-  use { 'lukas-reineke/indent-blankline.nvim',                                         -- Add indentation guides even on blank lines
-    opt = false,
-    config = function()
-      require('packages.indent_blankline');
-    end
-  }
-  use 'tpope/vim-sleuth'                                                               -- Detect tabstop and shiftwidth automatically
+  { "L3MON4D3/LuaSnip",                                                            -- Snippet Engine and Snippet Expansion
+    dependencies = { "saadparwaiz1/cmp_luasnip" }
+  },
 
-  use { 'junegunn/fzf',                                                                -- Install fzf and set base requirements instead of telescope
-    requires = { 'nvim-lua/popup.nvim',
-      'nvim-lua/plenary.nvim', }, -- opt = true },
-    run = './install --bin',
-    opt = true,
-    cmd = { 'FZF', 'FzfLua' },
-    -- keys = { '<leader>' },
-  }
-  use { 'ibhagwan/fzf-lua',                                                            -- Fuzzy finder for lua
-    requires = { 'kyazdani42/nvim-web-devicons', 'nvim-lua/popup.nvim',                -- popup for nice fzf looks
-      'nvim-lua/plenary.nvim', }, -- opt = true },
-    opt = true,
-    cmd = { 'FZF', 'FzfLua' },
-    -- keys = { '<leader>' },
+  { "mhartington/formatter.nvim",                                                  -- use advanced diagnostics with automated formatting
     config = function()
-      require('packages.FzfLua');
+      require("packages.formatter");
     end
-  }
+  },
 
-  use { 'kyazdani42/nvim-tree.lua',                                                    -- Use NerdTree
-    requires = { 'nvim-tree/nvim-web-devicons', opt = true },
-    -- opt = true,  -- for lazy loading lua.packages
-    cmd = { 'NvimTreeToggle', 'NvimTreeFindFile' },
+  { "Mofiqul/dracula.nvim",                                                        -- use darcula colortheme
     config = function()
-      -- put settings in seperate files for organisation and overview
-      -- folder lua.packages with file for each long settings part
-      require('packages.nvim-tree');
+      require("packages.dracula");
     end
-  }
-  use { 'folke/which-key.nvim',
-    opt = false,
-    cmd = { 'WhichKey' },
+  },
+  { "nvim-lualine/lualine.nvim",                                                   -- Fancier statusline
+    dependencies = { "Mofiqul/dracula.nvim" },
     config = function()
-      require('packages.WhichKey');
+      require("packages.LuaLine");
     end
-  }
+  },
+  { "lukas-reineke/indent-blankline.nvim",                                         -- Add indentation guides even on blank lines
+    config = function()
+      require("packages.indent_blankline");
+    end
+  },
+  { "tpope/vim-sleuth" },                                                          -- Detect tabstop and shiftwidth automatically
 
-  if is_bootstrap then
-    require('packer').sync()
-  end
-end)
--- stylua: ignore end
-
--- When we are bootstrapping a configuration, it doesn't
--- make sense to execute the rest of the init.lua.
---
--- You'll need to restart nvim, and then it will work.
-if is_bootstrap then
-  print '=================================='
-  print '    Plugins are being installed'
-  print '    Wait until Packer completes,'
-  print '       then restart nvim'
-  print '=================================='
-  return
-end
-
--- Automatically source and re-compile packer whenever you save this init.lua
-local packer_group = vim.api.nvim_create_augroup('Packer', { clear = true })
-vim.api.nvim_create_autocmd('BufWritePost', {
-  command = 'source <afile> | PackerCompile',
-  group = packer_group,
-  pattern = vim.fn.expand '$MYVIMRC',
+  { "junegunn/fzf",                                                                -- Install fzf and set base requirements instead of telescope
+    dependencies = { "nvim-lua/popup.nvim", "nvim-lua/plenary.nvim" },
+    run = "./install --bin",
+  },
+  { "ibhagwan/fzf-lua",                                                            -- Fuzzy finder for lua
+    dependencies = { "nvim-lua/popup.nvim", "nvim-lua/plenary.nvim" },             -- popup for nice fzf looks     
+    config = function()
+      require("packages.FzfLua");
+    end
+  },
+  { "kyazdani42/nvim-tree.lua",                                                    -- Use NerdTree
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    config = function()
+      require("packages.nvim-tree");
+    end
+  },
+  { "folke/which-key.nvim",
+    config = function()
+      require("packages.WhichKey");
+    end
+  },
+  -- install without yarn or npm
+  { "iamcco/markdown-preview.nvim",
+    run = function() vim.fn["mkdp#util#install"]() end,
+  },
 })
+-- stylua: ignore end
 
 -- [[ Setting options ]]
 -- See `:help vim.o`
@@ -178,7 +152,7 @@ vim.o.smartcase = true
 
 -- Decrease update time
 vim.o.updatetime = 250
-vim.wo.signcolumn = 'yes'
+vim.wo.signcolumn = "yes"
 
 -- Set colorscheme
 -- enable dracula colorscheme
@@ -186,7 +160,7 @@ vim.cmd[[colorscheme dracula]]
 vim.o.termguicolors = true
 
 -- Set completeopt to have a better completion experience
-vim.o.completeopt = 'menuone,noselect'
+vim.o.completeopt = "menuone,noselect"
 
 vim.o.syntax = true
 vim.o.autoindent = true
@@ -212,10 +186,11 @@ vim.opt.autoindent = true
 vim.opt.smartindent = true
 vim.opt.breakindent = true
 
+vim.opt.termguicolors = true
 
-require('additional')
-require('mappings')
-require('lsp-settings')
+require("additional")
+require("mappings")
+require("lsp-settings")
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
