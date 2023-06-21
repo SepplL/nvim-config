@@ -9,14 +9,7 @@ return {
     version = false, -- wait till new 0.7.0 release to put it back on semver
     event = "VimEnter",
     opts = function()
-      local logo = table.concat({
-        "           ███╗   ██╗██╗   ██╗██╗███╗   ███╗          Z",
-        "           ████╗  ██║██║   ██║██║████╗ ████║      Z    ",
-        "           ██╔███ ██║██║   ██║██║██╔████╔██║   z       ",
-        "           ██║╚█████║╚██╗ ██╔╝██║██║╚██╔╝██║ z         ",
-        "           ██║ ╚═███║ ╚████╔╝ ██║██║ ╚═╝ ██║           ",
-        "           ╚═╝   ╚══╝  ╚═══╝  ╚═╝╚═╝     ╚═╝           ",
-      }, "\n")
+      local logo = require("packages.starter-logos")[ math.random( #require("packages.starter-logos") ) ]
       local pad = string.rep(" ", 22)
       local new_section = function(name, action, section)
         return { name = name, action = action, section = pad .. section }

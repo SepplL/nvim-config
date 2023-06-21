@@ -1,5 +1,6 @@
 # nvim packer specific folder
 plugin/
+lazy-lock.json
 
 # Compiled Lua sources
 luac.out
