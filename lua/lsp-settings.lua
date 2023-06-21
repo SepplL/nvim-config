@@ -99,12 +99,12 @@ require('lspconfig').lua_ls.setup {
       diagnostics = {
         globals = { 'vim' },
       },
-      workspace = { 
-        library = vim.api.nvim_get_runtime_file('', true) 
+      workspace = {
+        library = vim.api.nvim_get_runtime_file('', true)
       },
       -- Do not send telemetry data containing a randomized but unique identifier
-      telemetry = { 
-        enable = false 
+      telemetry = {
+        enable = false
       },
     },
   },
@@ -115,7 +115,8 @@ require('lspconfig').jedi_language_server.setup {
   capabilities = capabilities,
   settings = {
     runtime = {
-      path = "/home/seppl/.local/anaconda3/bin/python3",
+      -- path = "/net/el7/python/3.10.6.risselada/bin/python3",
+      path = "/usr/bin/python",
     },
     initializationOptions = {
       codeAction = {

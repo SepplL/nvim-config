@@ -4,7 +4,6 @@ vim.g.loaded_netrwPlugin = 1
 
 -- create symlink to move package directory to /data with
 -- ln -s /data/nvim/... ~/.local/share/nvim
--- only necessary in quota based $HOME
 local lazypath = vim.fn.stdpath "data" .. "lazy/lazy.nvim"
 if not vim.loop.fs_stat( lazypath ) then
   vim.fn.system({
@@ -25,9 +24,41 @@ vim.opt.rtp:prepend( lazypath )
 vim.g.mapleader = " "
 vim.g.maplocalleader = ","
 
+
 -- stylua: ignore start
 require("lazy").setup({
-  { "LazyVim/LazyVim", import = "lazyvim.plugins" },
+  { "LazyVim/LazyVim",                                                             -- use this as inspiration for more packages
+    import = "lazyvim.plugins",
+    enabled = false,
+  },
+  { "mfussenegger/nvim-dap",                                                       -- debugging
+    dependencies = {
+      "rcarriga/nvim-dap-ui",
+    },
+    -- enable = false,
+  },
+  { "zbirenbaum/copilot.lua",                                                      -- AI code snippets
+    cmd = "Copilot",
+    config = function()
+      require("copilot").setup({})
+    end,
+  },
+  { require("packages.starter") },                                                 -- define own starting screen
+  { "rcarriga/nvim-notify",                                                        -- Fancy and beautiful notification system
+    require("packages.notify"),
+  },
+  { "stevearc/dressing.nvim",
+    opts = {},
+  },
+  { "echasnovski/mini.indentscope",
+    version = false,
+    event = { "BufReadPre", "BufNewFile" },
+    opts = {
+      -- symbol = "▏",
+      -- symbol = "│",
+      options = { try_as_border = true },
+    },
+  },
   { "tpope/vim-fugitive",                                                          -- Git commands in nvim
     config = function()
       require("packages.fugitive");
